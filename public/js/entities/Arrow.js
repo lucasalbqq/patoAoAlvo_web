@@ -34,6 +34,8 @@ export class Arrow {
         this.arrowName = bow.arrowName ?? 'Flecha';
         this.specialEffect = bow.specialEffect ?? 'none';
         this.specialEffectEnabled = bow.specialEffectEnabled === true;
+        this.visualEffect = bow.arrowVisual ?? 'wood';
+        this.accentColor = bow.arrowAccent ?? this.tipColor;
         this.active = true;
     }
 

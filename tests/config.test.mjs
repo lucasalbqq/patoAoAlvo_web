@@ -22,6 +22,9 @@ for (const [bow, arrow] of expectedBows) {
     assert.ok(config.includes(`'arrowName' => '${arrow}'`), `${arrow} deve estar configurada.`);
 }
 assert.equal((config.match(/'arrowName'\s*=>/g) ?? []).length, 10, 'A configuração deve conter dez flechas.');
+for (const visual of ['wood', 'reinforced', 'hunter', 'iron', 'fire', 'ice', 'electric', 'crystal', 'legendary', 'supreme']) {
+    assert.ok(config.includes(`'arrowVisual' => '${visual}'`), `O visual ${visual} deve estar configurado.`);
+}
 for (const price of [0, 150, 400, 800, 1400, 2200, 3200, 4500, 6500, 9000]) {
     assert.match(config, new RegExp(`'price'\\s*=>\\s*${price}`), `O preço ${price} deve estar configurado.`);
 }

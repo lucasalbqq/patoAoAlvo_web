@@ -56,6 +56,8 @@ O menu e a tela de resultado receberam placas ilustradas próprias, inspiradas n
 
 A progressão de equipamentos foi ampliada para dez pares de arco e flecha: Madeira, Reforçado, Caçador, Ferro, Flamejante, Congelante, Elétrico, Cristal, Lendário e Supremo. Velocidade, precisão, dano, alcance e cadência já evoluem por nível. Os poderes especiais de fogo, gelo, corrente elétrica e demais materiais estão representados e preparados na configuração, mas permanecem desativados até suas mecânicas serem implementadas.
 
+As dez flechas possuem identidade visual própria quando estão encaixadas, em voo e no impacto. Madeira gera lascas; Reforçada, fragmentos metálicos; Caçador, folhas; Ferro, anéis pesados; Fogo, brasas; Gelo, flocos; Elétrica, raios; Cristal, estilhaços; Lendária, estrelas; e Suprema, uma explosão dourada. Esses efeitos são exclusivamente visuais nesta versão e não aplicam estados adicionais aos patos.
+
 ## Executar com Docker (recomendado nesta máquina)
 
 Na raiz do projeto:

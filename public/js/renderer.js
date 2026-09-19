@@ -545,10 +545,11 @@ export class Renderer {
         ctx.stroke();
 
         if (aiming && archer.state !== 'released') {
+            const nockX = -18 - archer.charge * 22;
             ctx.strokeStyle = bow.arrowShaft;
             ctx.lineWidth = 5;
             ctx.beginPath();
-            ctx.moveTo(-18 - archer.charge * 22, 0);
+            ctx.moveTo(nockX, 0);
             ctx.lineTo(84, 0);
             ctx.stroke();
             ctx.fillStyle = bow.arrowTip ?? '#eff8f6';
@@ -559,6 +560,7 @@ export class Renderer {
             ctx.lineTo(69, 7);
             ctx.closePath();
             ctx.fill();
+            this.drawLoadedArrowAccent(ctx, bow, nockX, 84, archer.charge);
         }
         ctx.restore();
         ctx.restore();
@@ -626,6 +628,7 @@ export class Renderer {
             ctx.lineTo(72, 7);
             ctx.closePath();
             ctx.fill();
+            this.drawLoadedArrowAccent(ctx, bow, nockX, 86, archer.charge);
         }
         ctx.restore();
         ctx.restore();
@@ -649,40 +652,50 @@ export class Renderer {
             : this.assets.archer;
     }
 
+    drawLoadedArrowAccent(ctx, bow, nockX, tipX, phase) {
+        const arrowStyle = {
+            visualEffect: bow.arrowVisual ?? 'wood',
+            color: bow.color,
+            accentColor: bow.arrowAccent ?? bow.arrowTip ?? '#ffffff',
+        };
+
+        ctx.save();
+        ctx.fillStyle = arrowStyle.color;
+        ctx.beginPath();
+        ctx.moveTo(nockX + 4, 0);
+        ctx.lineTo(nockX - 10, -6);
+        ctx.lineTo(nockX - 6, 0);
+        ctx.lineTo(nockX - 10, 6);
+        ctx.closePath();
+        ctx.fill();
+        this.drawArrowAccent(ctx, arrowStyle, tipX - 2, phase, .72);
+        ctx.restore();
+    }
+
     drawArrow(ctx, arrow) {
         ctx.save();
         ctx.translate(arrow.x, arrow.y);
         ctx.rotate(arrow.rotation);
         ctx.lineCap = 'round';
 
-        if (arrow.bowLevel >= 3) {
-            ctx.globalAlpha = .5;
-            ctx.strokeStyle = arrow.color;
-            ctx.lineWidth = Math.min(10, 5 + arrow.bowLevel * .5);
-            ctx.shadowColor = arrow.color;
-            ctx.shadowBlur = 12;
-            ctx.beginPath();
-            ctx.moveTo(-70, 0);
-            ctx.lineTo(-34, 0);
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-            ctx.shadowBlur = 0;
-        }
+        this.drawArrowTrail(ctx, arrow);
 
+        const shaftWidth = arrow.visualEffect === 'iron' ? 5.5
+            : arrow.visualEffect === 'hunter' ? 3.2 : 4;
         ctx.strokeStyle = arrow.shaftColor;
-        ctx.lineWidth = 4;
+        ctx.lineWidth = shaftWidth;
         ctx.beginPath();
         ctx.moveTo(-35, 0);
         ctx.lineTo(24, 0);
         ctx.stroke();
 
         ctx.fillStyle = arrow.tipColor;
-        ctx.strokeStyle = '#344553';
+        ctx.strokeStyle = arrow.visualEffect === 'iron' ? '#26343d' : '#344553';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(35, 0);
-        ctx.lineTo(22, -6);
-        ctx.lineTo(22, 6);
+        ctx.moveTo(arrow.visualEffect === 'iron' ? 39 : 35, 0);
+        ctx.lineTo(22, arrow.visualEffect === 'iron' ? -8 : -6);
+        ctx.lineTo(22, arrow.visualEffect === 'iron' ? 8 : 6);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
@@ -695,7 +708,244 @@ export class Renderer {
         ctx.lineTo(-48, 8);
         ctx.closePath();
         ctx.fill();
+
+        this.drawArrowAccent(ctx, arrow, 32, arrow.age, 1);
         ctx.restore();
+    }
+
+    drawArrowTrail(ctx, arrow) {
+        const pulse = Math.sin(arrow.age * 24);
+        ctx.save();
+        ctx.globalAlpha = .62;
+        ctx.shadowColor = arrow.color;
+        ctx.shadowBlur = 10;
+
+        switch (arrow.visualEffect) {
+            case 'wood':
+                ctx.strokeStyle = '#c58a4d88';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-58, 0);
+                ctx.lineTo(-39, 0);
+                ctx.stroke();
+                break;
+            case 'reinforced':
+                ctx.strokeStyle = '#dff7ff';
+                ctx.lineWidth = 2;
+                [-5, 0, 5].forEach((offset, index) => {
+                    ctx.beginPath();
+                    ctx.moveTo(-82 + index * 7, offset);
+                    ctx.lineTo(-40, offset * .35);
+                    ctx.stroke();
+                });
+                break;
+            case 'hunter':
+                ctx.strokeStyle = '#7ed957';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-76, -3);
+                ctx.quadraticCurveTo(-58, -8 + pulse * 2, -38, 0);
+                ctx.stroke();
+                break;
+            case 'iron':
+                ctx.strokeStyle = '#c7d2d8';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.moveTo(-67, 0);
+                ctx.lineTo(-38, 0);
+                ctx.stroke();
+                break;
+            case 'fire':
+                ['#ff3d16', '#ff9f1c', '#ffe45c'].forEach((color, index) => {
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.moveTo(-37 - index * 8, 0);
+                    ctx.quadraticCurveTo(-51 - index * 10, -9 + pulse * 3, -72 - index * 7, 0);
+                    ctx.quadraticCurveTo(-51 - index * 10, 9 - pulse * 3, -37 - index * 8, 0);
+                    ctx.fill();
+                });
+                break;
+            case 'ice':
+                ctx.fillStyle = '#dffcff';
+                for (let index = 0; index < 4; index += 1) {
+                    const x = -43 - index * 13;
+                    const size = 3 + (index % 2);
+                    ctx.save();
+                    ctx.translate(x, Math.sin(arrow.age * 13 + index) * 5);
+                    ctx.rotate(Math.PI / 4);
+                    ctx.fillRect(-size / 2, -size / 2, size, size);
+                    ctx.restore();
+                }
+                break;
+            case 'electric':
+                ctx.strokeStyle = '#fff34f';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-85, 0);
+                ctx.lineTo(-73, -7 - pulse * 2);
+                ctx.lineTo(-62, 5);
+                ctx.lineTo(-51, -5);
+                ctx.lineTo(-38, 0);
+                ctx.stroke();
+                break;
+            case 'crystal':
+                ctx.fillStyle = '#8ffbf3';
+                for (let index = 0; index < 4; index += 1) {
+                    ctx.save();
+                    ctx.translate(-45 - index * 15, (index % 2 ? 1 : -1) * 5);
+                    ctx.rotate(Math.PI / 4);
+                    ctx.fillRect(-4, -4, 8, 8);
+                    ctx.restore();
+                }
+                break;
+            case 'legendary':
+                ctx.strokeStyle = '#b84dff';
+                ctx.lineWidth = 7;
+                ctx.beginPath();
+                ctx.moveTo(-92, 0);
+                ctx.lineTo(-38, 0);
+                ctx.stroke();
+                ctx.fillStyle = '#ffe36a';
+                this.drawStarPath(ctx, -68, -7 + pulse * 3, 5, 2.2, 5);
+                ctx.fill();
+                break;
+            case 'supreme':
+                ctx.strokeStyle = '#ffd447';
+                ctx.lineWidth = 9;
+                ctx.beginPath();
+                ctx.moveTo(-100, 0);
+                ctx.lineTo(-38, 0);
+                ctx.stroke();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-95, -4);
+                ctx.lineTo(-40, -1);
+                ctx.stroke();
+                ctx.fillStyle = '#ffffff';
+                this.drawStarPath(ctx, -75, 6 + pulse * 2, 5, 2, 5);
+                ctx.fill();
+                break;
+            default:
+                break;
+        }
+        ctx.restore();
+    }
+
+    drawArrowAccent(ctx, arrow, tipX, phase = 0, scale = 1) {
+        const pulse = 1 + Math.sin(phase * 20) * .12;
+        ctx.save();
+        ctx.translate(tipX, 0);
+        ctx.scale(scale, scale);
+        ctx.strokeStyle = arrow.accentColor;
+        ctx.fillStyle = arrow.accentColor;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        switch (arrow.visualEffect) {
+            case 'wood':
+                ctx.strokeStyle = '#6b351b';
+                ctx.lineWidth = 2;
+                [-13, -8].forEach((x) => {
+                    ctx.beginPath();
+                    ctx.moveTo(x, -4);
+                    ctx.lineTo(x, 4);
+                    ctx.stroke();
+                });
+                break;
+            case 'reinforced':
+                ctx.fillRect(-16, -5, 5, 10);
+                ctx.fillRect(-8, -4, 3, 8);
+                break;
+            case 'hunter':
+                ctx.beginPath();
+                ctx.ellipse(-13, -6, 7, 3, -.55, 0, TAU);
+                ctx.fill();
+                break;
+            case 'iron':
+                ctx.strokeStyle = '#ffffffaa';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-10, -7);
+                ctx.lineTo(4, 0);
+                ctx.lineTo(-10, 7);
+                ctx.stroke();
+                break;
+            case 'fire':
+                ctx.shadowColor = '#ff5a1f';
+                ctx.shadowBlur = 14;
+                ctx.fillStyle = '#ff5a1f';
+                ctx.beginPath();
+                ctx.moveTo(6, 0);
+                ctx.quadraticCurveTo(-2, -12 * pulse, -15, -4);
+                ctx.quadraticCurveTo(-8, 0, -15, 5);
+                ctx.quadraticCurveTo(-2, 11 * pulse, 6, 0);
+                ctx.fill();
+                ctx.fillStyle = '#ffe45c';
+                ctx.beginPath();
+                ctx.ellipse(-1, 0, 7, 3.5, 0, 0, TAU);
+                ctx.fill();
+                break;
+            case 'ice':
+                ctx.lineWidth = 2;
+                for (let index = 0; index < 3; index += 1) {
+                    ctx.rotate(Math.PI / 3);
+                    ctx.beginPath();
+                    ctx.moveTo(-8, 0);
+                    ctx.lineTo(8, 0);
+                    ctx.stroke();
+                }
+                break;
+            case 'electric':
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-18, -5);
+                ctx.lineTo(-9, 3);
+                ctx.lineTo(-2, -6);
+                ctx.lineTo(7, 1);
+                ctx.stroke();
+                break;
+            case 'crystal':
+                ctx.rotate(Math.PI / 4);
+                ctx.globalAlpha = .82;
+                ctx.fillRect(-8, -8, 16, 16);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(-8, -8, 16, 16);
+                break;
+            case 'legendary':
+                this.drawStarPath(ctx, 0, 0, 10 * pulse, 4.5, 5);
+                ctx.fill();
+                break;
+            case 'supreme':
+                ctx.shadowColor = '#ffd447';
+                ctx.shadowBlur = 16;
+                ctx.strokeStyle = '#ffd447';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(0, 0, 11 * pulse, 0, TAU);
+                ctx.stroke();
+                ctx.fillStyle = '#ffffff';
+                this.drawStarPath(ctx, 0, 0, 8, 3.5, 6);
+                ctx.fill();
+                break;
+            default:
+                break;
+        }
+        ctx.restore();
+    }
+
+    drawStarPath(ctx, centerX, centerY, outerRadius, innerRadius, points) {
+        ctx.beginPath();
+        for (let index = 0; index < points * 2; index += 1) {
+            const radius = index % 2 === 0 ? outerRadius : innerRadius;
+            const angle = -Math.PI / 2 + (index * Math.PI) / points;
+            const x = centerX + Math.cos(angle) * radius;
+            const y = centerY + Math.sin(angle) * radius;
+            if (index === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
     }
 
     drawCharge(ctx, charge) {
@@ -784,6 +1034,80 @@ export class Renderer {
                 break;
             case 'confetti':
                 ctx.fillRect(-particle.size * .5, -particle.size * .22, particle.size, particle.size * .44);
+                break;
+            case 'chip':
+                ctx.fillRect(-particle.size, -particle.size * .3, particle.size * 2, particle.size * .6);
+                break;
+            case 'metal':
+                ctx.strokeStyle = particle.secondaryColor ?? '#ffffff';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, -particle.size);
+                ctx.lineTo(particle.size * .7, 0);
+                ctx.lineTo(0, particle.size);
+                ctx.lineTo(-particle.size * .7, 0);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                break;
+            case 'leaf':
+                ctx.beginPath();
+                ctx.ellipse(0, 0, particle.size, particle.size * .42, -.55, 0, TAU);
+                ctx.fill();
+                break;
+            case 'ember':
+                ctx.shadowColor = particle.color;
+                ctx.shadowBlur = 9;
+                ctx.beginPath();
+                ctx.moveTo(0, -particle.size * 1.4);
+                ctx.quadraticCurveTo(particle.size, 0, 0, particle.size);
+                ctx.quadraticCurveTo(-particle.size, 0, 0, -particle.size * 1.4);
+                ctx.fill();
+                break;
+            case 'snowflake':
+                ctx.lineWidth = 1.6;
+                for (let index = 0; index < 3; index += 1) {
+                    ctx.rotate(Math.PI / 3);
+                    ctx.beginPath();
+                    ctx.moveTo(-particle.size, 0);
+                    ctx.lineTo(particle.size, 0);
+                    ctx.stroke();
+                }
+                break;
+            case 'shard':
+                ctx.fillStyle = particle.color;
+                ctx.strokeStyle = particle.secondaryColor ?? '#ffffff';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(0, -particle.size * 1.4);
+                ctx.lineTo(particle.size * .65, particle.size);
+                ctx.lineTo(-particle.size * .5, particle.size * .55);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                break;
+            case 'bolt':
+                ctx.shadowColor = particle.color;
+                ctx.shadowBlur = 7;
+                ctx.lineWidth = Math.max(2, particle.size * .35);
+                ctx.beginPath();
+                ctx.moveTo(-particle.size, -particle.size);
+                ctx.lineTo(0, -particle.size * .2);
+                ctx.lineTo(-particle.size * .3, particle.size * .15);
+                ctx.lineTo(particle.size, particle.size);
+                ctx.stroke();
+                break;
+            case 'ring':
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(0, 0, particle.size, 0, TAU);
+                ctx.stroke();
+                break;
+            case 'star':
+                ctx.shadowColor = particle.color;
+                ctx.shadowBlur = 8;
+                this.drawStarPath(ctx, 0, 0, particle.size, particle.size * .44, 5);
+                ctx.fill();
                 break;
             default:
                 ctx.shadowColor = particle.color;

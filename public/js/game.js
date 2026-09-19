@@ -281,7 +281,7 @@ export class Game {
             // ao ângulo negativo percebido pelo jogador no plano cartesiano.
             canHitWater: intendedAngle > 0,
         }));
-        this.particleSystem.emitShot(x, y, angle, bow.color);
+        this.particleSystem.emitShot(x, y, angle, bow);
         this.onSound('shoot');
         this.state.shots += 1;
         this.lastShotAt = firedAt;
@@ -384,7 +384,8 @@ export class Game {
     resolveCollisions() {
         const hits = resolveArrowDuckCollisions(this.state.arrows, this.state.ducks);
 
-        hits.forEach(({ duck, defeated }) => {
+        hits.forEach(({ arrow, duck, defeated }) => {
+            this.particleSystem.emitArrowImpact(arrow, duck);
             this.particleSystem.emitDuckImpact(duck, defeated);
             this.onSound(defeated ? 'duck' : 'hit');
 

@@ -360,6 +360,18 @@ um Pato-Alvo e aplicam apenas o valor normal de `damage`. `specialEffect` e
 `specialEffectEnabled` reservam a integração futura sem ativar efeitos de
 fogo, lentidão, corrente elétrica ou outros poderes antes da implementação.
 
+Cada flecha possui três representações visuais obrigatórias:
+
+-   detalhe próprio quando encaixada no arco;
+-   rastro próprio durante o voo;
+-   partículas próprias no impacto.
+
+As assinaturas visuais oficiais são: lascas para Madeira, metal para
+Reforçada, folhas para Caçador, anéis pesados para Ferro, brasas para Fogo,
+flocos para Gelo, raios para Elétrica, estilhaços para Cristal, estrelas para
+Lendária e explosão dourada para Suprema. Esses efeitos visuais não ativam
+queimadura, lentidão, dano em cadeia ou qualquer estado adicional.
+
 ------------------------------------------------------------------------
 
 # 12. Atributos dos arcos

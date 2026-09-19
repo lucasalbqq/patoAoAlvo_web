@@ -62,6 +62,8 @@ test('a flecha preserva o efeito futuro sem ativá-lo', () => {
             arrowName: 'Flecha de Fogo',
             specialEffect: 'fire',
             specialEffectEnabled: false,
+            arrowVisual: 'fire',
+            arrowAccent: '#ffe45c',
             arrowTip: '#ffd35a',
         },
     });
@@ -69,6 +71,8 @@ test('a flecha preserva o efeito futuro sem ativá-lo', () => {
     assert.equal(arrow.arrowName, 'Flecha de Fogo');
     assert.equal(arrow.specialEffect, 'fire');
     assert.equal(arrow.specialEffectEnabled, false);
+    assert.equal(arrow.visualEffect, 'fire');
+    assert.equal(arrow.accentColor, '#ffe45c');
     assert.equal(arrow.tipColor, '#ffd35a');
 });
 
