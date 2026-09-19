@@ -508,10 +508,10 @@ export class Renderer {
         ctx.translate(25, -9);
         ctx.rotate(aiming ? angle : -.18);
         ctx.strokeStyle = bow.color;
-        ctx.lineWidth = 8 + bowLevel;
+        ctx.lineWidth = 8 + Math.min(bowLevel, 5);
         if (bowLevel >= 3) {
             ctx.shadowColor = bow.color;
-            ctx.shadowBlur = bowLevel === 4 ? 16 : 9;
+            ctx.shadowBlur = Math.min(18, 7 + bowLevel);
         }
         ctx.beginPath();
         ctx.arc(25, 0, 55, -1.25, 1.25);
@@ -532,7 +532,7 @@ export class Renderer {
                 const ornamentX = 25 + Math.cos(arcAngle) * 55;
                 const ornamentY = Math.sin(arcAngle) * 55;
                 ctx.beginPath();
-                ctx.arc(ornamentX, ornamentY, 5 + bowLevel, 0, TAU);
+                ctx.arc(ornamentX, ornamentY, 5 + Math.min(bowLevel, 4), 0, TAU);
                 ctx.fill();
             });
         }
@@ -551,7 +551,7 @@ export class Renderer {
             ctx.moveTo(-18 - archer.charge * 22, 0);
             ctx.lineTo(84, 0);
             ctx.stroke();
-            ctx.fillStyle = '#eff8f6';
+            ctx.fillStyle = bow.arrowTip ?? '#eff8f6';
             ctx.beginPath();
             ctx.moveTo(84, 0);
             ctx.lineTo(69, -7);
@@ -569,6 +569,7 @@ export class Renderer {
         const angle = archer.isAiming ? archer.aimAngle : -.16;
         const sourceWidth = this.assets.bows.naturalWidth / 4;
         const sourceHeight = this.assets.bows.naturalHeight;
+        const spriteFrame = Math.min(4, Math.max(1, Number(bow.spriteFrame) || 1));
 
         const archerFrame = this.getArcherFrame(archer);
 
@@ -581,13 +582,14 @@ export class Renderer {
         ctx.rotate(angle);
         if (bowLevel >= 3) {
             ctx.shadowColor = bow.color;
-            ctx.shadowBlur = bowLevel === 4 ? 18 : 10;
+            ctx.shadowBlur = Math.min(20, 8 + bowLevel);
         }
         ctx.save();
         ctx.scale(-1, 1);
+        ctx.filter = bow.spriteFilter ?? 'none';
         ctx.drawImage(
             this.assets.bows,
-            (bowLevel - 1) * sourceWidth,
+            (spriteFrame - 1) * sourceWidth,
             0,
             sourceWidth,
             sourceHeight,
@@ -616,7 +618,7 @@ export class Renderer {
             ctx.moveTo(nockX, 0);
             ctx.lineTo(79, 0);
             ctx.stroke();
-            ctx.fillStyle = '#eff8f6';
+            ctx.fillStyle = bow.arrowTip ?? '#eff8f6';
             ctx.beginPath();
             ctx.moveTo(86, 0);
             ctx.lineTo(72, -7);
@@ -656,7 +658,7 @@ export class Renderer {
         if (arrow.bowLevel >= 3) {
             ctx.globalAlpha = .5;
             ctx.strokeStyle = arrow.color;
-            ctx.lineWidth = arrow.bowLevel === 4 ? 9 : 6;
+            ctx.lineWidth = Math.min(10, 5 + arrow.bowLevel * .5);
             ctx.shadowColor = arrow.color;
             ctx.shadowBlur = 12;
             ctx.beginPath();
@@ -674,9 +676,7 @@ export class Renderer {
         ctx.lineTo(24, 0);
         ctx.stroke();
 
-        ctx.fillStyle = arrow.bowLevel === 3
-            ? '#ffe04a'
-            : arrow.bowLevel === 4 ? '#e7b8ff' : '#e6edf0';
+        ctx.fillStyle = arrow.tipColor;
         ctx.strokeStyle = '#344553';
         ctx.lineWidth = 2;
         ctx.beginPath();

@@ -303,40 +303,27 @@ As moedas devem aparecer:
 
 # 10. Progressão de arcos
 
-O jogo terá **exatamente 4 níveis de arco** na versão definida do
+O jogo terá **exatamente 10 níveis de arco** na versão definida do
 projeto.
 
-Não criar uma progressão infinita de arcos.
+Não criar uma progressão infinita de arcos. A sequência oficial é:
 
-## Arco nível 1 --- Básico
+| Nível | Arco | Flecha | Característica |
+|---:|---|---|---|
+| 1 | Arco de Madeira | Flecha de Madeira | Básica |
+| 2 | Arco Reforçado | Flecha Reforçada | Mais rápida |
+| 3 | Arco de Caçador | Flecha de Caçador | Mais precisa |
+| 4 | Arco de Ferro | Flecha de Ferro | Mais dano |
+| 5 | Arco Flamejante | Flecha de Fogo | Dano extra futuro |
+| 6 | Arco Congelante | Flecha de Gelo | Desaceleração futura |
+| 7 | Arco Elétrico | Flecha Elétrica | Acerto em cadeia futuro |
+| 8 | Arco de Cristal | Flecha de Cristal | Alta precisão |
+| 9 | Arco Lendário | Flecha Lendária | Grande alcance e dano |
+| 10 | Arco Supremo | Flecha Suprema | Atributos máximos |
 
--   Equipamento inicial.
--   Dano básico.
--   Precisão básica.
--   Alcance básico.
--   Flecha básica.
-
-## Arco nível 2 --- Melhorado
-
--   Mais precisão.
--   Maior alcance.
--   Melhor desempenho geral.
--   Flecha melhorada.
-
-## Arco nível 3 --- Épico
-
--   Grande melhoria de precisão.
--   Maior alcance.
--   Maior dano.
--   Flecha épica.
-
-## Arco nível 4 --- Lendário
-
--   Melhor arco disponível.
--   Maior precisão.
--   Maior alcance.
--   Maior dano.
--   Flecha lendária.
+Os efeitos especiais de fogo, gelo, eletricidade, cristal, lendário e
+supremo ficam registrados na configuração, porém desativados até que suas
+mecânicas individuais sejam desenvolvidas e testadas.
 
 ### Regra
 
@@ -344,14 +331,20 @@ O jogador começa com o Arco Nível 1.
 
 Para desbloquear o próximo arco, precisa pagar moedas.
 
-Sugestão inicial de preços:
+Preços iniciais de balanceamento:
 
-  Arco                Preço
-  ----------- -------------
-  Básico             Grátis
-  Melhorado      300 moedas
-  Épico          800 moedas
-  Lendário      1500 moedas
+| Nível | Preço |
+|---:|---:|
+| 1 | Grátis |
+| 2 | 150 moedas |
+| 3 | 400 moedas |
+| 4 | 800 moedas |
+| 5 | 1400 moedas |
+| 6 | 2200 moedas |
+| 7 | 3200 moedas |
+| 8 | 4500 moedas |
+| 9 | 6500 moedas |
+| 10 | 9000 moedas |
 
 Os preços devem ficar configuráveis para balanceamento.
 
@@ -359,35 +352,13 @@ Os preços devem ficar configuráveis para balanceamento.
 
 # 11. Flechas
 
-Cada arco deve possuir uma flecha visualmente correspondente.
+Cada um dos dez arcos possui uma flecha visualmente correspondente. A flecha
+equipada muda automaticamente de acordo com o arco selecionado.
 
-## Flecha nível 1 --- Básica
-
--   Madeira.
--   Ponta simples.
--   Dano básico.
-
-## Flecha nível 2 --- Melhorada
-
--   Visual mais elaborado.
--   Maior velocidade ou estabilidade.
--   Dano maior.
-
-## Flecha nível 3 --- Épica
-
--   Visual dourado/energizado.
--   Maior velocidade.
--   Maior dano.
-
-## Flecha nível 4 --- Lendária
-
--   Visual roxo/mágico.
--   Maior velocidade.
--   Maior alcance.
--   Maior dano.
-
-A flecha equipada deve mudar automaticamente de acordo com o arco
-selecionado.
+Nesta etapa, todas as flechas usam a mesma regra de colisão: atingem somente
+um Pato-Alvo e aplicam apenas o valor normal de `damage`. `specialEffect` e
+`specialEffectEnabled` reservam a integração futura sem ativar efeitos de
+fogo, lentidão, corrente elétrica ou outros poderes antes da implementação.
 
 ------------------------------------------------------------------------
 
@@ -399,35 +370,18 @@ Cada arco deve ter atributos configuráveis:
 -   `precision`
 -   `range`
 -   `arrowSpeed`
+-   `shotsPerSecond`
 -   `price`
+-   `arrowName`
+-   `specialEffect`
+-   `specialEffectEnabled`
 
 Exemplo conceitual:
 
-``` text
-Arco 1:
-dano = 1
-precisão = 1.0
-alcance = 1.0
-velocidade = 1.0
-
-Arco 2:
-dano = 2
-precisão = 1.15
-alcance = 1.20
-velocidade = 1.10
-
-Arco 3:
-dano = 3
-precisão = 1.30
-alcance = 1.45
-velocidade = 1.25
-
-Arco 4:
-dano = 4
-precisão = 1.50
-alcance = 1.75
-velocidade = 1.40
-```
+Os valores começam em dano 1, precisão/alcance/velocidade 1.0 no Arco de
+Madeira e crescem gradualmente até dano 6, precisão/alcance 2.10 e velocidade
+1.28 no Arco Supremo. A tabela completa e os preços ficam na configuração
+central, evitando duplicação.
 
 Os valores acima são apenas valores iniciais de balanceamento.
 
@@ -435,7 +389,7 @@ Os valores acima são apenas valores iniciais de balanceamento.
 
 # 13. Loja
 
-A loja permite comprar e equipar os quatro arcos.
+A loja permite comprar e equipar os dez arcos em sequência.
 
 A loja deve mostrar:
 
@@ -682,7 +636,7 @@ Elementos:
 
 ## 21.3 Loja
 
-Mostrar os quatro arcos.
+Mostrar os dez arcos e suas flechas correspondentes.
 
 ## 21.4 Tela de vitória / resultado
 
@@ -884,39 +838,29 @@ GAME_CONFIG = {
 
     bows: {
         1: {
-            name: "Básico",
+            name: "Arco de Madeira",
+            arrowName: "Flecha de Madeira",
             price: 0,
             damage: 1,
             precision: 1.0,
             range: 1.0,
-            arrowSpeed: 1.0
+            arrowSpeed: 1.0,
+            specialEffect: "none",
+            specialEffectEnabled: false
         },
 
-        2: {
-            name: "Melhorado",
-            price: 300,
-            damage: 2,
-            precision: 1.15,
-            range: 1.20,
-            arrowSpeed: 1.10
-        },
+        // Níveis 2 a 9 seguem a progressão oficial da seção 10.
 
-        3: {
-            name: "Épico",
-            price: 800,
-            damage: 3,
-            precision: 1.30,
-            range: 1.45,
-            arrowSpeed: 1.25
-        },
-
-        4: {
-            name: "Lendário",
-            price: 1500,
-            damage: 4,
-            precision: 1.50,
-            range: 1.75,
-            arrowSpeed: 1.40
+        10: {
+            name: "Arco Supremo",
+            arrowName: "Flecha Suprema",
+            price: 9000,
+            damage: 6,
+            precision: 2.10,
+            range: 2.10,
+            arrowSpeed: 1.28,
+            specialEffect: "supreme",
+            specialEffectEnabled: false
         }
     }
 };
@@ -1225,7 +1169,7 @@ recursos extras.
 -   Moedas.
 -   Game Over/resultado.
 -   Um sistema simples de partidas.
--   Quatro arcos definidos no código.
+-   Dez arcos definidos no código.
 -   Loja básica.
 -   Compra de arco.
 -   Equipar arco.
@@ -1344,14 +1288,11 @@ Criar:
 
 ------------------------------------------------------------------------
 
-## Sprint 7 --- Quatro arcos e quatro flechas
+## Sprint 7 --- Progressão inicial de arcos e flechas
 
 Criar:
 
--   Arco Básico;
--   Arco Melhorado;
--   Arco Épico;
--   Arco Lendário;
+-   os dez arcos oficiais, de Madeira até Supremo;
 -   flecha correspondente a cada arco;
 -   atributos configuráveis.
 
@@ -1438,8 +1379,8 @@ O Codex deve seguir estas regras durante o desenvolvimento:
 
 1.  Não mudar o nome do jogo.
 2.  O nome oficial é **Pato ao Alvo**.
-3.  Não criar uma quinta evolução de arco.
-4.  O sistema oficial possui 4 níveis de arco.
+3.  Não criar níveis além dos dez definidos sem atualizar este documento.
+4.  O sistema oficial possui 10 níveis de arco.
 5.  Cada arco possui sua própria flecha.
 6.  Não adicionar funcionalidades grandes sem necessidade.
 7.  Priorizar o MVP jogável.

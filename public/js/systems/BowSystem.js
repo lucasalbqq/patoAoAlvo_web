@@ -3,8 +3,8 @@ export class BowSystem {
         this.bows = bows;
         this.levels = Object.keys(bows).map(Number).sort((a, b) => a - b);
 
-        if (this.levels.length !== 4 || this.levels.some((level, index) => level !== index + 1)) {
-            throw new Error('Pato ao Alvo exige exatamente quatro níveis de arco.');
+        if (this.levels.length !== 10 || this.levels.some((level, index) => level !== index + 1)) {
+            throw new Error('Pato ao Alvo exige exatamente dez níveis de arco.');
         }
 
         this.unlockedLevels = normalizeUnlocked(unlockedLevels, this.levels);

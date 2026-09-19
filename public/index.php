@@ -79,7 +79,7 @@ $encodedConfig = json_encode(
             <div class="hud-pill"><span class="coin-icon">●</span><span>Partida</span><strong id="round-coins">0</strong></div>
             <div class="hud-pill"><span>⏱️</span><strong id="round-time">60</strong><span>s</span></div>
             <div class="hud-pill hud-pill--difficulty"><strong id="difficulty-label">Tranquilo</strong></div>
-            <div class="hud-pill"><span>🏹</span><strong id="equipped-bow-name">Arco Básico</strong></div>
+            <div class="hud-pill"><span>🏹</span><strong id="equipped-bow-name">Arco de Madeira</strong></div>
             <button id="back-button" class="game-button game-button--small" type="button">← Menu</button>
             <p class="demo-tip">Mouse/toque: segure e solte · Teclado: setas/WASD + espaço</p>
         </section>
@@ -122,7 +122,7 @@ $encodedConfig = json_encode(
                     <div><span>Média</span><strong id="training-average-score">0</strong></div>
                     <div><span>Precisão</span><strong id="training-average-accuracy">0%</strong></div>
                     <div><span>Acertos</span><strong id="training-total-hits">0</strong></div>
-                    <div><span>Arco favorito</span><strong id="training-favorite-bow">Básico</strong></div>
+                    <div><span>Arco favorito</span><strong id="training-favorite-bow">Arco de Madeira</strong></div>
                 </div>
 
                 <div class="training-history-wrap">
@@ -143,13 +143,13 @@ $encodedConfig = json_encode(
                 <div class="arsenal-heading">
                     <div>
                         <p>Melhore seu equipamento</p>
-                        <h2 id="arsenal-title">Loja de Arcos</h2>
+                        <h2 id="arsenal-title">Arcos e Flechas</h2>
                     </div>
                     <div class="shop-balance"><span class="coin-icon">●</span><strong id="shop-balance">0</strong></div>
                     <button id="arsenal-close-button" class="game-button game-button--small" type="button">← Menu</button>
                 </div>
                 <div id="arsenal-list" class="arsenal-list"></div>
-                <p class="arsenal-note">Compre os arcos em sequência. Equipamentos desbloqueados ficam salvos neste navegador.</p>
+                <p class="arsenal-note">São 10 níveis comprados em sequência. Efeitos elementais especiais chegarão em uma atualização futura.</p>
             </div>
         </section>
 

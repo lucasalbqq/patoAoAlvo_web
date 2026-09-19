@@ -54,6 +54,24 @@ test('os atributos do arco alteram velocidade, alcance e dano', () => {
     assert.equal(improved.bowLevel, 2);
 });
 
+test('a flecha preserva o efeito futuro sem ativá-lo', () => {
+    const arrow = createArrow({
+        bowLevel: 5,
+        bow: {
+            ...basicBow,
+            arrowName: 'Flecha de Fogo',
+            specialEffect: 'fire',
+            specialEffectEnabled: false,
+            arrowTip: '#ffd35a',
+        },
+    });
+
+    assert.equal(arrow.arrowName, 'Flecha de Fogo');
+    assert.equal(arrow.specialEffect, 'fire');
+    assert.equal(arrow.specialEffectEnabled, false);
+    assert.equal(arrow.tipColor, '#ffd35a');
+});
+
 test('a flecha é desativada ao superar o alcance', () => {
     const arrow = createArrow();
     arrow.distance = arrow.maxDistance - 1;

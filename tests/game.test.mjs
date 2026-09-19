@@ -7,48 +7,22 @@ globalThis.window = {
         title: 'Pato ao Alvo',
         version: '1.0.0',
         roundDuration: 60,
-        bows: {
-            1: {
-                name: 'Básico',
-                price: 0,
-                damage: 1,
-                precision: 1,
-                range: 1,
-                arrowSpeed: 1,
-                shotsPerSecond: .8,
+        bows: Object.fromEntries(Array.from({ length: 10 }, (_, index) => {
+            const level = index + 1;
+            return [level, {
+                name: level === 1 ? 'Arco de Madeira' : `Arco ${level}`,
+                arrowName: level === 1 ? 'Flecha de Madeira' : `Flecha ${level}`,
+                price: level === 1 ? 0 : level * 100,
+                damage: Math.ceil(level / 2),
+                precision: 1 + level * .05,
+                range: 1 + level * .05,
+                arrowSpeed: 1 + level * .02,
+                shotsPerSecond: .7 + level * .1,
                 color: '#b96832',
-            },
-            2: {
-                name: 'Melhorado',
-                price: 300,
-                damage: 2,
-                precision: 1.15,
-                range: 1.2,
-                arrowSpeed: 1.06,
-                shotsPerSecond: 1.05,
-                color: '#39a9ff',
-            },
-            3: {
-                name: 'Épico',
-                price: 800,
-                damage: 3,
-                precision: 1.3,
-                range: 1.45,
-                arrowSpeed: 1.12,
-                shotsPerSecond: 1.35,
-                color: '#ffbd2e',
-            },
-            4: {
-                name: 'Lendário',
-                price: 1500,
-                damage: 4,
-                precision: 1.5,
-                range: 1.75,
-                arrowSpeed: 1.18,
-                shotsPerSecond: 1.7,
-                color: '#b84dff',
-            },
-        },
+                specialEffect: level >= 5 ? 'planned' : 'none',
+                specialEffectEnabled: false,
+            }];
+        })),
         ducks: {
             common: {
                 name: 'Pato Comum',
@@ -98,7 +72,7 @@ test('um arco salvo inválido volta com segurança ao arco básico', () => {
     const game = new Game(canvasStub, { currentBow: '__proto__' });
 
     assert.equal(game.state.currentBow, 1);
-    assert.equal(game.state.bow.name, 'Básico');
+    assert.equal(game.state.bow.name, 'Arco de Madeira');
 });
 
 test('derrubar um pato integra colisão, pontos, moedas e HUD', () => {
@@ -149,27 +123,27 @@ test('o fim do tempo encerra controles e entrega o resultado', () => {
     assert.equal(results[0].score, 0);
 });
 
-test('a loja compra em sequência e permite equipar arcos desbloqueados', () => {
-    const game = new Game(canvasStub, { initialCoins: 3000 });
+test('a loja compra em sequência e permite equipar os dez arcos', () => {
+    const game = new Game(canvasStub, { initialCoins: 10000 });
 
-    assert.equal(game.setCurrentBow(4), false);
+    assert.equal(game.setCurrentBow(10), false);
     assert.equal(game.buyBow(3).reason, 'previous-bow-required');
-    assert.equal(game.buyBow(2).success, true);
-    assert.equal(game.buyBow(3).success, true);
-    assert.equal(game.buyBow(4).success, true);
-    assert.equal(game.state.totalCoins, 400);
-    assert.equal(game.setCurrentBow(4), true);
-    assert.equal(game.state.currentBow, 4);
-    assert.equal(game.state.bow.damage, 4);
+    for (let level = 2; level <= 10; level += 1) {
+        assert.equal(game.buyBow(level).success, true);
+    }
+    assert.equal(game.state.totalCoins, 4600);
+    assert.equal(game.setCurrentBow(10), true);
+    assert.equal(game.state.currentBow, 10);
+    assert.equal(game.state.bow.damage, 5);
 });
 
 test('a loja não compra sem saldo e não permite compras durante a partida', () => {
-    const game = new Game(canvasStub, { initialCoins: 299 });
+    const game = new Game(canvasStub, { initialCoins: 199 });
 
     const insufficient = game.buyBow(2);
     assert.equal(insufficient.success, false);
     assert.equal(insufficient.reason, 'insufficient-coins');
-    assert.equal(game.state.totalCoins, 299);
+    assert.equal(game.state.totalCoins, 199);
 
     game.setDemoRunning(true);
     assert.equal(game.buyBow(2).reason, 'round-running');

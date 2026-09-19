@@ -30,6 +30,10 @@ export class Arrow {
         this.bowLevel = bowLevel;
         this.color = bow.color;
         this.shaftColor = bow.arrowShaft ?? '#e8d3a2';
+        this.tipColor = bow.arrowTip ?? '#e6edf0';
+        this.arrowName = bow.arrowName ?? 'Flecha';
+        this.specialEffect = bow.specialEffect ?? 'none';
+        this.specialEffectEnabled = bow.specialEffectEnabled === true;
         this.active = true;
     }
 

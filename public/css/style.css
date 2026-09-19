@@ -682,14 +682,9 @@ button {
     background-image: url('/assets/sprites/arcos.png');
     background-repeat: no-repeat;
     background-size: 400% 100%;
-    filter: drop-shadow(0 0 8px var(--bow-color));
+    filter: var(--bow-sprite-filter, none) drop-shadow(0 0 8px var(--bow-color));
     transform: scaleX(-1);
 }
-
-.arsenal-card__icon--1 { background-position: 0 center; }
-.arsenal-card__icon--2 { background-position: 33.333% center; }
-.arsenal-card__icon--3 { background-position: 66.666% center; }
-.arsenal-card__icon--4 { background-position: 100% center; }
 
 .arsenal-card h3 {
     margin: 2px 0;
@@ -704,6 +699,28 @@ button {
     color: #cbe8f3;
     font-size: clamp(.65rem, 1vw, .82rem);
     text-align: center;
+}
+
+.arsenal-card__arrow {
+    display: grid;
+    gap: 2px;
+    margin: 4px 0 6px;
+    padding: 6px 8px;
+    border: 2px solid var(--bow-color);
+    border-radius: 10px;
+    background: #031f35b8;
+    text-align: center;
+}
+
+.arsenal-card__arrow strong {
+    color: #fff4bd;
+    font-size: clamp(.68rem, 1vw, .82rem);
+}
+
+.arsenal-card__arrow span {
+    color: var(--bow-color);
+    font-size: clamp(.58rem, .9vw, .72rem);
+    font-weight: 900;
 }
 
 .arsenal-card__price {

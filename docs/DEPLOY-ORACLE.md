@@ -1,5 +1,32 @@
 # Deploy na Oracle Cloud
 
+## Ambiente atualmente publicado
+
+A produção em `https://jogo.alugaxp.com.br` usa Nginx e PHP-FPM 8.1 de forma
+nativa, sem Docker:
+
+```text
+Nginx -> /var/www/pato-ao-alvo-web/public -> PHP-FPM 8.1
+```
+
+O site Nginx fica em `/etc/nginx/sites-available/pato-ao-alvo-web` e o clone
+do projeto em `/var/www/pato-ao-alvo-web`.
+
+### Atualizar a produção atual
+
+```bash
+cd /var/www/pato-ao-alvo-web
+git status --short
+git pull --ff-only
+php -l public/index.php
+php -l config/game.php
+```
+
+As verificações devem terminar sem alterações locais e sem erros de sintaxe.
+Não é necessário reiniciar o AlugaXP.
+
+## Alternativa com Docker
+
 O jogo pode compartilhar a mesma instância do AlugaXP. Ele não usa banco de
 dados e deve ficar acessível apenas pelo proxy HTTPS já instalado no servidor.
 

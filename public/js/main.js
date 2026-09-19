@@ -191,10 +191,12 @@ function loadProgress() {
         const merged = { ...initial, ...saved };
         const currentBow = Number(merged.currentBow);
 
+        const highestBowLevel = Math.max(...Object.keys(GAME_CONFIG.bows).map(Number));
+
         return {
             ...merged,
             coins: toNonNegativeInteger(merged.coins),
-            currentBow: Number.isInteger(currentBow) && currentBow >= 1 && currentBow <= 4
+            currentBow: Number.isInteger(currentBow) && currentBow >= 1 && currentBow <= highestBowLevel
                 ? currentBow
                 : 1,
             bestScore: toNonNegativeInteger(merged.bestScore),
@@ -282,7 +284,7 @@ function updateRoundHud({ timeRemaining, difficulty }) {
 }
 
 function updateBow({ level, bow, unlockedBows }) {
-    elements.equippedBowName.textContent = `Arco ${bow.name}`;
+    elements.equippedBowName.textContent = bow.name;
     progress.currentBow = level;
     progress.unlockedBows = [...unlockedBows];
     saveProgress();
@@ -295,9 +297,12 @@ function renderArsenal() {
         card.className = `arsenal-card arsenal-card--${level}`;
         card.dataset.level = level;
         card.style.setProperty('--bow-color', bow.color);
+        card.style.setProperty('--bow-sprite-filter', bow.spriteFilter ?? 'none');
 
         const icon = document.createElement('div');
-        icon.className = `arsenal-card__icon arsenal-card__icon--${level}`;
+        icon.className = 'arsenal-card__icon';
+        const spriteFrame = Math.min(4, Math.max(1, Number(bow.spriteFrame) || 1));
+        icon.style.backgroundPosition = `${((spriteFrame - 1) / 3) * 100}% center`;
         icon.setAttribute('aria-hidden', 'true');
 
         const title = document.createElement('h3');
@@ -305,6 +310,10 @@ function renderArsenal() {
 
         const description = document.createElement('p');
         description.textContent = bow.description;
+
+        const arrow = document.createElement('div');
+        arrow.className = 'arsenal-card__arrow';
+        arrow.innerHTML = `<strong>${bow.arrowName}</strong><span>${bow.effectLabel}</span>`;
 
         const price = document.createElement('div');
         price.className = 'arsenal-card__price';
@@ -326,7 +335,7 @@ function renderArsenal() {
         button.textContent = 'Carregando';
         button.addEventListener('click', () => handleBowAction(Number(level)));
 
-        card.append(icon, title, description, price, attributes, button);
+        card.append(icon, title, arrow, description, price, attributes, button);
         elements.arsenalList.append(card);
     });
 
@@ -430,13 +439,13 @@ function renderTraining() {
     elements.trainingAverageScore.textContent = summary.averageScore.toLocaleString('pt-BR');
     elements.trainingAverageAccuracy.textContent = `${summary.averageAccuracy}%`;
     elements.trainingTotalHits.textContent = summary.totalHits.toLocaleString('pt-BR');
-    elements.trainingFavoriteBow.textContent = GAME_CONFIG.bows[summary.favoriteBow]?.name ?? 'Básico';
+    elements.trainingFavoriteBow.textContent = GAME_CONFIG.bows[summary.favoriteBow]?.name ?? 'Arco de Madeira';
     elements.trainingHistory.replaceChildren();
     elements.trainingEmpty.hidden = balanceTracker.history.length > 0;
 
     balanceTracker.history.forEach((entry, index) => {
         const item = document.createElement('li');
-        const bowName = GAME_CONFIG.bows[entry.bowLevel]?.name ?? 'Básico';
+        const bowName = GAME_CONFIG.bows[entry.bowLevel]?.name ?? 'Arco de Madeira';
         item.innerHTML = `
             <span class="training-history__position">#${index + 1}</span>
             <span><strong>${entry.score.toLocaleString('pt-BR')} pts</strong><small>${bowName}</small></span>
