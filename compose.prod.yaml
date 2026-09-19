@@ -1,0 +1,21 @@
+name: pato-ao-alvo-web
+
+services:
+  game:
+    image: pato-ao-alvo-web:latest
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:${PATO_PORT:-8081}:80"
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - php
+        - -r
+        - "exit(@file_get_contents('http://127.0.0.1/api/health.php') === false ? 1 : 0);"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

@@ -91,6 +91,12 @@ npm test
 
 Endpoint inicial de diagnóstico: <http://localhost:8080/api/health.php>.
 
+## Publicação na Oracle Cloud
+
+A configuração de produção está em `compose.prod.yaml` e mantém o container
+disponível somente em `127.0.0.1:8081`, pronto para receber tráfego do proxy
+HTTPS do servidor. Consulte o roteiro em `docs/DEPLOY-ORACLE.md`.
+
 ## Estrutura
 
 ```text
