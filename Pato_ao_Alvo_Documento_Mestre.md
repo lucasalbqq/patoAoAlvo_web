@@ -588,6 +588,11 @@ Sons previstos:
 Todos os sons devem poder ser substituídos facilmente por arquivos reais
 posteriormente.
 
+Na versão 1.5, os dez tipos de flecha receberam perfis sintetizados
+específicos para disparo e impacto. Madeira, Reforçada, Caçador, Ferro,
+Fogo, Gelo, Elétrica, Cristal, Lendária e Suprema possuem timbres e camadas
+distintos, mantendo os mesmos controles gerais de volume, efeitos e mute.
+
 ------------------------------------------------------------------------
 
 # 20. Cenários

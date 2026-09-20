@@ -51,6 +51,54 @@ test('um efeito cria e agenda um oscilador quando há suporte', async () => {
     assert.equal(context.oscillators[0].stopped, true);
 });
 
+test('cada tipo de flecha usa seu perfil de disparo e impacto', async () => {
+    const arrowTypes = [
+        'wood', 'reinforced', 'hunter', 'iron', 'fire',
+        'ice', 'electric', 'crystal', 'legendary', 'supreme',
+    ];
+
+    for (const visualEffect of arrowTypes) {
+        const context = createFakeContext();
+        const audio = new AudioSystem({}, class {
+            constructor() {
+                return context;
+            }
+        });
+
+        audio.play('shoot', { visualEffect });
+        await flushPromises();
+        const shootOscillators = context.oscillators.length;
+        audio.play('hit', { visualEffect });
+        await flushPromises();
+
+        assert.ok(shootOscillators >= 1, `${visualEffect} deve possuir som de disparo.`);
+        assert.ok(context.oscillators.length > shootOscillators, `${visualEffect} deve possuir som de impacto.`);
+    }
+});
+
+test('perfil supremo combina mais camadas do que o perfil de madeira', async () => {
+    const context = createFakeContext();
+    const audio = new AudioSystem({}, class {
+        constructor() {
+            return context;
+        }
+    });
+
+    audio.play('shoot', { visualEffect: 'wood' });
+    await flushPromises();
+    const woodLayers = context.oscillators.length;
+    audio.play('shoot', { visualEffect: 'supreme' });
+    await flushPromises();
+
+    assert.equal(woodLayers, 1);
+    assert.equal(context.oscillators.length - woodLayers, 3);
+});
+
+async function flushPromises() {
+    await Promise.resolve();
+    await Promise.resolve();
+}
+
 function createFakeContext() {
     const parameter = () => ({
         setValueAtTime() {},

@@ -1,6 +1,6 @@
 {
   "name": "pato-ao-alvo",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "Jogo casual 2D de arco e flecha em PHP e Canvas.",

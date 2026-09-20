@@ -48,10 +48,12 @@ $encodedConfig = json_encode(
         </header>
 
         <section id="menu-screen" class="screen screen--menu" aria-labelledby="game-title">
+            <p class="creator-credit">by Davi Ramos de Souza</p>
+
             <div class="logo" role="img" aria-label="Logo Pato ao Alvo">
-                <span class="logo__pato">PATO</span>
-                <span class="logo__ao">AO</span>
-                <span class="logo__alvo">ALVO</span>
+                <span class="logo__pato">Pato</span>
+                <span class="logo__ao">ao</span>
+                <span class="logo__alvo">Alvo</span>
             </div>
 
             <p class="tagline">Mire com calma. Acerte em cheio!</p>

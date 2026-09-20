@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'title' => 'Pato ao Alvo',
-    'version' => '1.4.0',
+    'version' => '1.5.0',
     'roundDuration' => 60,
     'bows' => [
         1 => [

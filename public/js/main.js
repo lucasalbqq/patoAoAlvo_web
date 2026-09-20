@@ -68,7 +68,7 @@ const game = new Game(elements.canvas, {
     onRoundUpdate: updateRoundHud,
     onRoundEnd: showResult,
     onBowChange: updateBow,
-    onSound: (name) => audio.play(name),
+    onSound: (name, details) => audio.play(name, details),
     reducedMotion,
 });
 let toastTimeout;

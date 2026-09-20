@@ -270,7 +270,7 @@ export class Game {
         const x = archer.x + Math.cos(angle) * distanceFromArcher;
         const y = archer.renderY + Math.sin(angle) * distanceFromArcher - 8;
 
-        this.state.arrows.push(new Arrow({
+        const arrow = new Arrow({
             x,
             y,
             angle,
@@ -280,9 +280,14 @@ export class Game {
             // No Canvas, ângulos positivos apontam para baixo. Isso equivale
             // ao ângulo negativo percebido pelo jogador no plano cartesiano.
             canHitWater: intendedAngle > 0,
-        }));
+        });
+        this.state.arrows.push(arrow);
         this.particleSystem.emitShot(x, y, angle, bow);
-        this.onSound('shoot');
+        this.onSound('shoot', {
+            bowLevel: arrow.bowLevel,
+            arrowName: arrow.arrowName,
+            visualEffect: arrow.visualEffect,
+        });
         this.state.shots += 1;
         this.lastShotAt = firedAt;
         return true;
@@ -387,7 +392,12 @@ export class Game {
         hits.forEach(({ arrow, duck, defeated }) => {
             this.particleSystem.emitArrowImpact(arrow, duck);
             this.particleSystem.emitDuckImpact(duck, defeated);
-            this.onSound(defeated ? 'duck' : 'hit');
+            this.onSound(defeated ? 'duck' : 'hit', {
+                bowLevel: arrow.bowLevel,
+                arrowName: arrow.arrowName,
+                visualEffect: arrow.visualEffect,
+                defeated,
+            });
 
             if (!defeated) {
                 return;

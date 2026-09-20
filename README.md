@@ -58,6 +58,8 @@ A progressão de equipamentos foi ampliada para dez pares de arco e flecha: Made
 
 As dez flechas possuem identidade visual própria quando estão encaixadas, em voo e no impacto. Madeira gera lascas; Reforçada, fragmentos metálicos; Caçador, folhas; Ferro, anéis pesados; Fogo, brasas; Gelo, flocos; Elétrica, raios; Cristal, estilhaços; Lendária, estrelas; e Suprema, uma explosão dourada. Esses efeitos são exclusivamente visuais nesta versão e não aplicam estados adicionais aos patos.
 
+Na versão 1.5, cada uma das dez flechas também recebeu assinaturas sonoras próprias no disparo e no impacto, sintetizadas pela Web Audio API e integradas aos controles de volume existentes. O menu ganhou lettering cartoon ampliado para **Pato ao Alvo** e o crédito **by Davi Ramos de Souza** no céu da tela inicial.
+
 ## Executar com Docker (recomendado nesta máquina)
 
 Na raiz do projeto:
